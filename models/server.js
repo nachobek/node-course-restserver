@@ -4,7 +4,7 @@ const cors = require('cors');
 class Server {
     constructor() {
         this.app = express();
-        this.port = process.env.PORT;
+        this.port = process.env.PORT || 3000;
         this.usersRoute = '/api/users'; // Defining the route as a field so it's easier to see and keep track of.
 
         //Middlewares
