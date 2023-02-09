@@ -130,9 +130,19 @@ const usersPost = async (req = request, res = response) => {
     });
 }
 
-const usersDelete = (req = request, res = response) => {
+const usersDelete = async (req = request, res = response) => {
+    const userId = req.params.id;
+
+    // Physical deletion from DB
+    // const user = await User.findByIdAndDelete(userId);
+
+    
+    // Local deletion from DB
+    const user = await User.findByIdAndUpdate(userId, {state: false});
+
     res.json({
-        msg: 'Hello from usersDelete Controller'
+        msg: 'Hello from usersDelete Controller',
+        user
     });
 }
 

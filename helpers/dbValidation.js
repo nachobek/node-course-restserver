@@ -25,6 +25,13 @@ const userValidationById = async (id) => {
         throw new Error('User not found with given ID');
     }}
 
+const userIsActiveById = async (id) => {
+    const userIsActive = await User.findOne({_id: id, state: true});
+
+    if (!userIsActive) {
+        throw new Error('No Active user found with given ID');
+    }}
+
 const paginationValidation = async (number) => {
     if (number < 0 || !Number.isInteger(Number(number))) {
         throw new Error('Invalid pagination argument');
@@ -34,5 +41,6 @@ module.exports = {
     roleValidation,
     emailValidation,
     userValidationById,
-    paginationValidation
+    paginationValidation,
+    userIsActiveById
 }

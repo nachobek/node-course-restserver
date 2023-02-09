@@ -13,7 +13,7 @@ const { check } = require('express-validator');
 // Importing usersGet Controller.
 const { usersGet, usersPut, usersPost, usersDelete } = require('../controllers/users');
 const { paramsValidation } = require('../middlewares/paramsValidation');
-const { roleValidation, emailValidation, userValidationById, paginationValidation } = require('../helpers/dbValidation');
+const { roleValidation, emailValidation, userValidationById, paginationValidation, userIsActiveById } = require('../helpers/dbValidation');
 
 
 // Application development.
@@ -65,7 +65,12 @@ router.post('/', [
 
 
 
-router.delete('/', usersDelete);
+router.delete('/:id', [
+    check('id', 'Invalid ID').isMongoId(),
+    check('id').custom(userValidationById),
+    check('id').custom(userIsActiveById),
+    paramsValidation
+], usersDelete);
 
 
 
