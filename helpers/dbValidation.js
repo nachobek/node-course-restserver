@@ -16,26 +16,32 @@ const emailValidation = async (email) => {
 
     if (emailExists) {
         throw new Error('Email already exists');
-    }}
+    }
+}
 
 const userValidationById = async (id) => {
     const userExists = await User.findById(id);
 
     if (!userExists) {
         throw new Error('User not found with given ID');
-    }}
+    }
+}
 
 const userIsActiveById = async (id) => {
     const userIsActive = await User.findOne({_id: id, state: true});
 
     if (!userIsActive) {
         throw new Error('No Active user found with given ID');
-    }}
+    }
+}
 
-const paginationValidation = async (number) => {
-    if (number < 0 || !Number.isInteger(Number(number))) {
-        throw new Error('Invalid pagination argument');
-    }}
+const paginationValidation = async (number = "") => {
+    if (number != "") {
+        if (number < 0 || !Number.isInteger(Number(number))) {
+            throw new Error('Invalid pagination argument');
+        }
+    }
+}
 
 module.exports = {
     roleValidation,
