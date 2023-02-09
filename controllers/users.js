@@ -5,7 +5,7 @@
 // Importing the request and response "types" from express, so I can get autocomplete assistance from VS Code.
 const { request, response } = require('express');
 const bcryptjs = require('bcryptjs');
-const { validationResult } = require('express-validator');
+// const { validationResult } = require('express-validator'); // No longer needed since it's been moved to paramsValidation.js
 
 
 // Own modules.
@@ -42,11 +42,11 @@ const usersPut = (req = request, res = response) => {
 const usersPost = async (req = request, res = response) => {
     // Get the errors identified by "check()" middleware from express-validator.
     // Return BadRequest if any error was identified.
-    const errors = validationResult(req);
+    // const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        return res.status(400).json(errors);
-    }
+    // if (!errors.isEmpty()) {
+    //     return res.status(400).json(errors);
+    // }
 
 
     // const header = req.headers;
@@ -64,14 +64,14 @@ const usersPost = async (req = request, res = response) => {
     const user = new User({name, email, password, image, role});
 
 
-    // Verify if email already exists.
-    const emailExists = await User.findOne({email: email});
+    // Verify if email already exists. --> This is moved to dbValidation.js
+    // const emailExists = await User.findOne({email: email}); // Same as doing: .findOne({email});
 
-    if (emailExists) {
-        return res.status(400).json({
-            message: "Email already exists."
-        });
-    }
+    // if (emailExists) {
+    //     return res.status(400).json({
+    //         message: "Email already exists"
+    //     });
+    // }
 
 
     //Encrypt password.
@@ -86,7 +86,7 @@ const usersPost = async (req = request, res = response) => {
     res.status(201).json({
         verb: 'POST',
         msg: 'Hello from usersPost Controller',
-        user
+        user // Here user is an instance of User. It will return only the fields we selected in the overwritten method toJSON() in the user.js Model.
     });
 }
 
