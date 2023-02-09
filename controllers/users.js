@@ -14,28 +14,69 @@ const User = require('../models/user');
 
 //UsersController.
 
-const usersGet = (req = request, res = response) => {
+const usersGet = async (req = request, res = response) => {
 
     // Can destructure the query params into our desired variables and set up default values if a given argument is not given.
-    const {q, name = 'No Name', page = '1', limit = '10'} = req.query;
+    // const {q, name = 'No Name', page = '1', limit = '10'} = req.query;
 
+    const { limit = 5, offset = 0 } = req.query;
+
+    const queryFilter = {state: true}
+
+    // -------------------------------------
+    // The two below DB queries are Promises.
+    // Because we are using await, they are being executed in sequence. The await is needed so the Response is executed after the queries finish.
+    //
+    // const users = await User.find(queryFilter)
+    //     .skip(Number(offset))
+    //     .limit(Number(limit));
+    //
+    // const totalUsersInDB = await User.countDocuments(queryFilter);
+
+    // However we could combine both in a single Promise and run them in parallel to save runtime.
+    // The return will be an array with each response, so we can destructure it to obtain the individual responses the way it was before.
+    const [ totalUsersInDB, users ] = await Promise.all([
+        User.countDocuments(queryFilter),
+        User.find(queryFilter)
+            .skip(Number(offset))
+            .limit(Number(limit))
+    ]);
+    // -------------------------------------
+
+    // Sending the users found as an object, else it'll be sent as an array.
     res.json({
-        verb: 'GET',
-        msg: 'Hello from usersGet Controller',
-        q,
-        name,
-        page,
-        limit
+        totalUsersInDB,
+        users
     });
+
+
+    // res.json({
+    //     msg: 'Hello from usersGet Controller',
+    //     q,
+    //     name,
+    //     page,
+    //     limit
+    // });
 }
 
-const usersPut = (req = request, res = response) => {
+const usersPut = async (req = request, res = response) => {
     const userId = req.params.id;
 
+    const { password, googleLinked, ...restBody } = req.body;
+
+
+    // We are assuming if password is sent in PUT then the client wants it updated. Else we ignore it.
+    if (password) {
+        const salt = bcryptjs.genSaltSync();
+        restBody.password = bcryptjs.hashSync(password, salt); // Adding password key to the remaining of the body extracted.
+    }
+
+    const user = await User.findByIdAndUpdate(userId, restBody);
+
     res.json({
-        verb: 'PUT',
         msg: 'Hello from usersPut Controller',
-        idGiven: userId
+        idGiven: userId,
+        user
     });
 }
 
@@ -84,7 +125,6 @@ const usersPost = async (req = request, res = response) => {
     await user.save();
 
     res.status(201).json({
-        verb: 'POST',
         msg: 'Hello from usersPost Controller',
         user // Here user is an instance of User. It will return only the fields we selected in the overwritten method toJSON() in the user.js Model.
     });
@@ -92,7 +132,6 @@ const usersPost = async (req = request, res = response) => {
 
 const usersDelete = (req = request, res = response) => {
     res.json({
-        verb: 'DELETE',
         msg: 'Hello from usersDelete Controller'
     });
 }

@@ -18,7 +18,21 @@ const emailValidation = async (email) => {
         throw new Error('Email already exists');
     }}
 
+const userValidationById = async (id) => {
+    const userExists = await User.findById(id);
+
+    if (!userExists) {
+        throw new Error('User not found with given ID');
+    }}
+
+const paginationValidation = async (number) => {
+    if (number < 0 || !Number.isInteger(Number(number))) {
+        throw new Error('Invalid pagination argument');
+    }}
+
 module.exports = {
     roleValidation,
-    emailValidation
+    emailValidation,
+    userValidationById,
+    paginationValidation
 }
