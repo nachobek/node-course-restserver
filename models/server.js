@@ -12,6 +12,7 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
         this.usersRoute = '/api/users'; // Defining the route as a field so it's easier to see and keep track of.
+        this.authRoute = '/api/auth';
 
         // Connect to the DB.
         this.dbConnect();
@@ -39,6 +40,8 @@ class Server {
     }
 
     routes() {
+        this.app.use(this.authRoute, require('../routes/auth'));
+
         // We can directly define the routes with all their logic in here using app.get()
         // this.app.get('/api', (req, res) => {
         //     res.json({
@@ -47,7 +50,7 @@ class Server {
         //     });
         // });
 
-        //Or define our routes and point to an additional file with all the business logic for a better organization.
+        //Or define our main routes and point to an additional file with sub-routes, multiple verbs handler and additional middleware validation checks for a better organization.
         this.app.use(this.usersRoute, require('../routes/users'));
     }
 

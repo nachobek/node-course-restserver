@@ -12,11 +12,19 @@ const { check } = require('express-validator');
 // Own modules
 // Importing usersGet Controller.
 const { usersGet, usersPut, usersPost, usersDelete } = require('../controllers/users');
-const { paramsValidation } = require('../middlewares/paramsValidation');
+
+//----------------------------------
+// Replacing multiple middleware files import with a single index.js file which contains all of them.
+// const { paramsValidation } = require('../middlewares/paramsValidation');
+// const { validateJWT } = require('../middlewares/jwtValidation');
+// const { isAdmin, hasRole } = require('../middlewares/userRoleValidation');
+const { paramsValidation, validateJWT, isAdmin, hasRole } = require('../middlewares'); // Same as ../middlewares/index
+//----------------------------------
+
 const { roleValidation, emailValidation, userValidationById, paginationValidation, userIsActiveById } = require('../helpers/dbValidation');
 
 
-// Application development.
+// Application routing development.
 
 const router = Router();
 
@@ -66,6 +74,9 @@ router.post('/', [
 
 
 router.delete('/:id', [
+    validateJWT,
+    // isAdmin, // This function forces an admin role to continue.
+    hasRole('ADMIN_ROLE', 'SALES_ROLE'), // This is a direct execution of function, with custom arguments rather (there is no req, res, next). Therefore it executes the classic middle function inside.
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom(userValidationById),
     check('id').custom(userIsActiveById),

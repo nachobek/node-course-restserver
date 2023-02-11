@@ -135,9 +135,8 @@ const usersDelete = async (req = request, res = response) => {
 
     // Physical deletion from DB
     // const user = await User.findByIdAndDelete(userId);
-
     
-    // Local deletion from DB
+    // Logical deletion from DB
     const user = await User.findByIdAndUpdate(userId, {state: false});
 
     res.json({

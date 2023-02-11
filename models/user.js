@@ -36,9 +36,12 @@ const UserSchema = Schema({
 // Overwriting the toJSON function, in order to hide/ fields to be returned for security/protection.
 // After creating a new instance of this User object, when returning that instance, the below custom fields will be returned instead. That is, everything but "__v" and "password".
 UserSchema.methods.toJSON = function () {
-    const { __v, password, ...user } = this.toObject();
+    const { __v, password, _id, ...user } = this.toObject();
 
-    return user;
+    return {
+        "uid": _id,
+        ...user
+    };
 }
 
 module.exports = model('User', UserSchema);
