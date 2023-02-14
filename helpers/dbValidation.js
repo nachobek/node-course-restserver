@@ -44,28 +44,10 @@ const paginationValidation = async (number = "") => {
     }
 }
 
-const categoryExists = async (categoryId) => {
-    const category = await Category.findOne({_id: categoryId, active: true});
-
-    if (!category) {
-        throw new Error('No Active Category found with given ID');
-    }
-}
-
-const isCategoryUnique = async (categoryName) => {
-    const category = await Category.findOne({name: categoryName});
-
-    if (category) {
-        throw new Error(`Category Name ${categoryName} already exists`);
-    }
-}
-
 module.exports = {
     roleValidation,
     emailValidation,
     userValidationById,
     paginationValidation,
-    userIsActiveById,
-    categoryExists,
-    isCategoryUnique
+    userIsActiveById
 }

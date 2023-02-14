@@ -11,9 +11,18 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
-        this.usersRoute = '/api/users'; // Defining the route as a field so it's easier to see and keep track of.
-        this.authRoute = '/api/auth';
-        this.categoriesRoute = '/api/categories';
+
+        // this.usersRoute = '/api/users'; // Defining the route as a field so it's easier to see and keep track of.
+        // this.authRoute = '/api/auth';
+        // this.categoriesRoute = '/api/categories';
+        // this.productsRoute = '/api/products';
+
+        this.paths = {
+            auth:       '/api/auth',
+            categories: '/api/categories',
+            products:   '/api/products',
+            users:      '/api/users'
+        }
 
         // Connect to the DB.
         this.dbConnect();
@@ -41,7 +50,12 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.authRoute, require('../routes/auth'));
+        this.app.use(this.paths.auth, require('../routes/auth'));
+
+        this.app.use(this.paths.categories, require('../routes/categories'));
+
+        this.app.use(this.paths.products, require('../routes/products'));
+
 
         // We can directly define the routes with all their logic in here using app.get()
         // this.app.get('/api', (req, res) => {
@@ -52,9 +66,7 @@ class Server {
         // });
 
         //Or define our main routes and point to an additional file with sub-routes, multiple verbs handler and additional middleware validation checks for a better organization.
-        this.app.use(this.usersRoute, require('../routes/users'));
-
-        this.app.use(this.categoriesRoute, require('../routes/categories'));
+        this.app.use(this.paths.users, require('../routes/users'));
     }
 
     listen() {

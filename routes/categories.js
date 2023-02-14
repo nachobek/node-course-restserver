@@ -8,9 +8,9 @@ const { check } = require('express-validator');
 
 
 // Own modules
-const { validateJWT, paramsValidation, notCategoryExists, categoryNameExists } = require('../middlewares');
+const { validateJWT, paramsValidation, notCategoryExists, categoryNameExists, isAdmin } = require('../middlewares');
 const { createCategory, getCategories, getCategoryById, updateCategoryById, deleteCategoryById } = require('../controllers/categories');
-const { paginationValidation, isCategoryUnique } = require('../helpers/dbValidation');
+const { paginationValidation } = require('../helpers/dbValidation');
 
 
 // Route development.
@@ -53,6 +53,7 @@ router.put('/:id', [
 
 router.delete('/:id', [
     validateJWT,
+    isAdmin,
     check('id', 'Invalid ID').isMongoId(),
     paramsValidation,
     notCategoryExists // Last so it validates there is a valid MongoID to prevent app crash.

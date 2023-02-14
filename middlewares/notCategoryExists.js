@@ -7,7 +7,7 @@ const notCategoryExists = async (req, res, next) => {
     if (!categoryExists) {
         return res.status(404).json({
             msg: `No Active Category found with ID: ${req.params.id}`
-        })
+        });
     }
 
     next();

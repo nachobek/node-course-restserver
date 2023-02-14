@@ -7,11 +7,18 @@ const jwtValidation = require('../middlewares/jwtValidation');
 const userRoleValidation = require('../middlewares/userRoleValidation');
 const notCategoryExists = require('../middlewares/notCategoryExists');
 const categoryNameExists = require('./categoryNameExists');
+const productNameExists = require('./productNameExists');
+const notProductCategoryExists = require('./notProductCategoryExists');
+const notProductExists = require('./notProductExists');
+
 
 module.exports = {
     ...paramsValidation,
     ...jwtValidation,
     ...userRoleValidation,
     ...notCategoryExists,
-    ...categoryNameExists
+    ...categoryNameExists,
+    ...productNameExists,
+    ...notProductCategoryExists,
+    ...notProductExists
 }
