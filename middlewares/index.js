@@ -5,9 +5,13 @@
 const paramsValidation = require('../middlewares/paramsValidation');
 const jwtValidation = require('../middlewares/jwtValidation');
 const userRoleValidation = require('../middlewares/userRoleValidation');
+const notCategoryExists = require('../middlewares/notCategoryExists');
+const categoryNameExists = require('./categoryNameExists');
 
 module.exports = {
     ...paramsValidation,
     ...jwtValidation,
-    ...userRoleValidation
+    ...userRoleValidation,
+    ...notCategoryExists,
+    ...categoryNameExists
 }

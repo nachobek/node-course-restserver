@@ -13,6 +13,7 @@ class Server {
         this.port = process.env.PORT;
         this.usersRoute = '/api/users'; // Defining the route as a field so it's easier to see and keep track of.
         this.authRoute = '/api/auth';
+        this.categoriesRoute = '/api/categories';
 
         // Connect to the DB.
         this.dbConnect();
@@ -52,6 +53,8 @@ class Server {
 
         //Or define our main routes and point to an additional file with sub-routes, multiple verbs handler and additional middleware validation checks for a better organization.
         this.app.use(this.usersRoute, require('../routes/users'));
+
+        this.app.use(this.categoriesRoute, require('../routes/categories'));
     }
 
     listen() {
