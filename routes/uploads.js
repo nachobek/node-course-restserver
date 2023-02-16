@@ -7,15 +7,31 @@ const {check} = require('express-validator');
 
 
 // Own modules
-const { paramsValidation } = require('../middlewares');
-const { fileUpload } = require('../controllers/uploads');
+const { paramsValidation, fileToUploadExists } = require('../middlewares');
+const { fileUpload, imageUpdate, imageDisplay } = require('../controllers/uploads');
+const { validateCollectionAllowed } = require('../helpers');
 
 
 // Route development.
 
 const router = Router();
 
-router.post('/', fileUpload);
+router.post('/', [
+    fileToUploadExists
+], fileUpload);
 
+
+router.put('/:collection/:id', [
+    fileToUploadExists,
+    check('id', 'Invalid Product ID').isMongoId(),
+    check('collection').custom(c => validateCollectionAllowed(c, ['products', 'users'])),
+    paramsValidation
+], imageUpdate);
+
+router.get('/:collection/:id', [
+    check('id', 'Invalid Product ID').isMongoId(),
+    check('collection').custom(c => validateCollectionAllowed(c, ['products', 'users'])),
+    paramsValidation
+], imageDisplay)
 
 module.exports = router;

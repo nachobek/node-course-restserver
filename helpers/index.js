@@ -1,12 +1,12 @@
 const dbValidation = require('./dbValidation');
-const fileUpload = require('./fileUpload');
+const uploadFile = require('./uploadFile');
 const generateJwt = require('./generateJwt');
 const googleVerify = require('./googleVerify');
 
 
 module.exports = {
     ...dbValidation,
-    ...fileUpload,
     ...generateJwt,
-    ...googleVerify
+    ...googleVerify,
+    ...uploadFile
 }

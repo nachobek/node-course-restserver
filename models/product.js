@@ -8,7 +8,8 @@ const ProductSchema = Schema({
     price: {type: Number, default: 0},
     category: {type: Schema.Types.ObjectId, ref: 'Category', required: [true, 'The product Category is required.']},
     description: {type: String},
-    isAvailable: {type: Boolean, default: true}
+    isAvailable: {type: Boolean, default: true},
+    image: {type: String}
 });
 
 

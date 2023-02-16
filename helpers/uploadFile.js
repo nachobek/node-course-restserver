@@ -13,9 +13,14 @@ const {v4: uuidv4} = require('uuid');
 
 // The "files" argument reprensts the "req.files" used by express-fileupload. Which is an object of name given in the form-data (Api Body)
 // By default, our app allows 1 file to be sent in a parameter called "file". That's why we destructure file from files.
-const fileupload = (files, allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'], uploadFolder = '') => {
+const uploadFile = (files, allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'], uploadFolder = '') => {
     return new Promise((resolve, reject) => {
         const {file} = files;
+
+        if (!file) {
+            return reject('No files to upload were found');
+        }
+
         const fileSplit = file.name.split('.');
         const fileExtension = fileSplit[fileSplit.length - 1];
 
@@ -48,5 +53,5 @@ const fileupload = (files, allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'], up
 }
 
 module.exports = {
-    fileupload
+    uploadFile
 }

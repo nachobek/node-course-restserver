@@ -10,6 +10,7 @@ const categoryNameExists = require('./categoryNameExists');
 const productNameExists = require('./productNameExists');
 const notProductCategoryExists = require('./notProductCategoryExists');
 const notProductExists = require('./notProductExists');
+const fileToUploadExists = require('./fileToUploadExists');
 
 
 module.exports = {
@@ -20,5 +21,6 @@ module.exports = {
     ...categoryNameExists,
     ...productNameExists,
     ...notProductCategoryExists,
-    ...notProductExists
+    ...notProductExists,
+    ...fileToUploadExists
 }

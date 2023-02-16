@@ -1,6 +1,5 @@
 const Role = require('../models/role');
 const User = require('../models/user');
-const Category = require('../models/category');
 
 
 // Custom validators.
@@ -44,10 +43,23 @@ const paginationValidation = async (number = "") => {
     }
 }
 
+const validateCollectionAllowed = (collection = '', allowedCollections = []) => {
+    const isCollectionAllowed = allowedCollections.includes(collection);
+
+    if (!isCollectionAllowed) {
+        throw new Error('Invalid Collection');
+    }
+
+    // Do to the way this function is being called, we must add a return true statement.
+    // In the other validation functions above the return is implicit. (?) Although it would have been good practice to include it.
+    return true;
+}
+
 module.exports = {
     roleValidation,
     emailValidation,
     userValidationById,
     paginationValidation,
-    userIsActiveById
+    userIsActiveById,
+    validateCollectionAllowed
 }
