@@ -1,2 +1,4 @@
+uploads/*
+!uploads/readme.md
 node_modules/
 .env

@@ -1,11 +1,16 @@
 // Node modules
 
+
 //3rd party modules
 const express = require('express');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+
 
 // Own modules
 const { dbConnection } = require('../database/config');
+
+// Class development
 
 class Server {
     constructor() {
@@ -22,6 +27,7 @@ class Server {
             categories: '/api/categories',
             products:   '/api/products',
             search:     '/api/search',
+            uploads:    '/api/uploads',
             users:      '/api/users'
         }
 
@@ -48,6 +54,13 @@ class Server {
 
         // Public directory
         this.app.use(express.static('public'));
+
+        //File upload (express-fileupload)
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }));
     }
 
     routes() {
@@ -58,6 +71,8 @@ class Server {
         this.app.use(this.paths.products, require('../routes/products'));
 
         this.app.use(this.paths.search, require('../routes/search'));
+
+        this.app.use(this.paths.uploads, require('../routes/uploads'));
 
 
         // We can directly define the routes with all their logic in here using app.get()
