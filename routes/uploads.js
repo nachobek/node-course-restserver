@@ -8,7 +8,7 @@ const {check} = require('express-validator');
 
 // Own modules
 const { paramsValidation, fileToUploadExists } = require('../middlewares');
-const { fileUpload, imageUpdate, imageDisplay } = require('../controllers/uploads');
+const { fileUpload, imageUpdate, imageDisplay, imageUpdateCloudinary } = require('../controllers/uploads');
 const { validateCollectionAllowed } = require('../helpers');
 
 
@@ -21,12 +21,22 @@ router.post('/', [
 ], fileUpload);
 
 
+// Replacing the local image update with Cloudinary hosting.
+// router.put('/:collection/:id', [
+//     fileToUploadExists,
+//     check('id', 'Invalid Product ID').isMongoId(),
+//     check('collection').custom(c => validateCollectionAllowed(c, ['products', 'users'])),
+//     paramsValidation
+// ], imageUpdate);
+
+
 router.put('/:collection/:id', [
     fileToUploadExists,
     check('id', 'Invalid Product ID').isMongoId(),
     check('collection').custom(c => validateCollectionAllowed(c, ['products', 'users'])),
     paramsValidation
-], imageUpdate);
+], imageUpdateCloudinary);
+
 
 router.get('/:collection/:id', [
     check('id', 'Invalid Product ID').isMongoId(),
