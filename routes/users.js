@@ -48,6 +48,8 @@ router.get('/', [
 
 // Adding mandatory parameters to the route. Any optional param "?" is already handled automatically by express.
 router.put('/:id', [
+    validateJWT,
+    isAdmin,
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom(userValidationById),
     check('role').custom(roleValidation),
@@ -59,6 +61,8 @@ router.put('/:id', [
 // If more than one middleware is needed, they must be added as an array, in square brackets.
 // The "check" middleware comes from express-validator package.
 router.post('/', [
+    validateJWT,
+    isAdmin,
     check('name', 'Name is mandatory').not().isEmpty(),
     check('password', 'Password is mandatory. At least 6 characters long').isLength({min: 6}),
     check('email', 'Invalid email address').isEmail(),
@@ -75,8 +79,8 @@ router.post('/', [
 
 router.delete('/:id', [
     validateJWT,
-    // isAdmin, // This function forces an admin role to continue.
-    hasRole('ADMIN_ROLE', 'SALES_ROLE'), // This is a direct execution of function, with custom arguments rather (there is no req, res, next). Therefore it executes the classic middle function inside.
+    isAdmin, // This function forces an admin role to continue.
+    // hasRole('ADMIN_ROLE', 'SALES_ROLE'), // This is a direct execution of function, with custom arguments rather (there is no req, res, next). Therefore it executes the classic middle function inside.
     check('id', 'Invalid ID').isMongoId(),
     check('id').custom(userValidationById),
     check('id').custom(userIsActiveById),

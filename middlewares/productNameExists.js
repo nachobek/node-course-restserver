@@ -8,6 +8,14 @@ const productNameExists = async (req, res, next) => {
         return next();
     }
 
+    if (req.method === 'PUT') {
+        const productDb = await Product.findOne({_id: req.params.id, active: true});
+
+        if (name.toUpperCase() === productDb.name.toUpperCase()) {
+            return next();
+        }
+    }
+
     const productNameExists = await Product.findOne({name: name.toUpperCase(), active: true});
     
     if (productNameExists) {

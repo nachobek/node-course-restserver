@@ -1,6 +1,5 @@
 // Node modules.
 
-
 // 3rd party modules.
 
 
@@ -32,7 +31,7 @@ const getProducts = async (req, res) => {
         });
     }
 
-    console.log(req);
+    // console.log(req);
 
     return res.status(200).json({products});
 }

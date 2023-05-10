@@ -9,7 +9,7 @@ const isAdmin = (req, res, next) => {
     const { role, name } = req.authenticatedUser;
 
     if (role !== 'ADMIN_ROLE') {
-        return res.status(401).json({
+        return res.status(403).json({
             msg: 'No Authorized. User must be admin'
         });
     }
@@ -26,7 +26,7 @@ const hasRole = (...roles) => {
         }
 
         if (!roles.includes(req.authenticatedUser.role)) {
-            return res.status(401).json({
+            return res.status(403).json({
                 msg: `No Authorized. User must have one of the following roles: ${roles}`
             })
         }

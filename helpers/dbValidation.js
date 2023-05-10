@@ -12,7 +12,7 @@ const roleValidation = async (role = '') => {
 }
 
 const emailValidation = async (email) => {
-    const emailExists = await User.findOne({email: email}); // Same as doing: .findOne({email});
+    const emailExists = await User.findOne({email: email, state: true}); // Same as doing: .findOne({email});
 
     if (emailExists) {
         throw new Error('Email already exists');

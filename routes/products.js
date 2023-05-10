@@ -8,7 +8,7 @@ const { check } = require('express-validator');
 
 
 // Own modules
-const { validateJWT, paramsValidation, productNameExists, notProductCategoryExists, notProductExists, isAdmin } = require('../middlewares');
+const { validateJWT, paramsValidation, productNameExists, notProductCategoryExists, notProductExists, isAdmin, hasRole } = require('../middlewares');
 const { createProduct, getProducts, getProduct, updateProduct, deleteProduct } = require('../controllers/products');
 const { paginationValidation } = require('../helpers/dbValidation');
 
@@ -33,6 +33,7 @@ router.get('/:id', [
 
 router.post('/', [
     validateJWT,
+    hasRole('ADMIN_ROLE', 'SALES_ROLE'),
     check('name', 'Name is mandatory').not().isEmpty(),
     check('category', 'Invalid Category ID').isMongoId(),
     paramsValidation,
@@ -43,6 +44,7 @@ router.post('/', [
 
 router.put('/:id', [
     validateJWT,
+    hasRole('ADMIN_ROLE', 'SALES_ROLE'),
     // check('name', 'Name is mandatory').not().isEmpty(),
     check('id', 'Invalid Product ID').isMongoId(),
     check('category', 'Invalid Category ID').optional().isMongoId(),
@@ -55,7 +57,8 @@ router.put('/:id', [
 
 router.delete('/:id', [
     validateJWT,
-    isAdmin,
+    // isAdmin,
+    hasRole('ADMIN_ROLE', 'SALES_ROLE'),
     check('id', 'Invalid Product ID').isMongoId(),
     paramsValidation,
     notProductExists

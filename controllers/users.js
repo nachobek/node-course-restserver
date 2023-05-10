@@ -102,7 +102,8 @@ const usersPost = async (req = request, res = response) => {
     // Therefore we'll only get the key/value pairs we need from the body using destructuring.
     const { name, email, password, image, role } = req.body;
 
-    const user = new User({name, email, password, image, role});
+    // const user = new User({name, email, password, image, role, state: true}); // By doing this, the new User object will get an _id property, which we won't need if we are updating a deleted user.
+    const user = {name, email, password, image, role, state: true};
 
 
     // Verify if email already exists. --> This is moved to dbValidation.js
@@ -120,14 +121,44 @@ const usersPost = async (req = request, res = response) => {
     user.password = bcryptjs.hashSync(password, salt);
 
 
-    // Add data to the DB. 
-    //TODO: Add try-catch, else the app will crash with invalid data.
-    await user.save();
+    // If the email already exists but it's in deleted state. We'll assume the account is either being reactivated or taken over.
+    const deletedUser = await User.findOne({email, active: false});
 
-    res.status(201).json({
-        msg: 'Hello from usersPost Controller',
-        user // Here user is an instance of User. It will return only the fields we selected in the overwritten method toJSON() in the user.js Model.
-    });
+    if (deletedUser) {
+        try {
+            const updatedProduct = await User.findByIdAndUpdate(deletedUser._id, user, {new: true});
+    
+            return res.status(201).json({
+                msg: 'User created successfully',
+                user: updatedProduct
+            });
+        } catch (error) {
+            console.log('Error when creating user in the DB:\n', error);
+
+            return res.status(500).json({
+                msg: 'Error when creating user in the DB. See error log on server console.',
+                user
+            });
+        }
+    }
+
+    // Add data to the DB. 
+    try {
+        // await user.save(); // This statement will work if user is an instance of User, in which case it'll already have an mongo "_id" property.
+        await User(user).save();
+
+        return res.status(201).json({
+            msg: 'User created successfully',
+            user // Here user is an instance of User. It will return only the fields we selected in the overwritten method toJSON() in the user.js Model.
+        });
+    } catch (error) {
+        console.log('Error when creating user in the DB:\n', error);
+
+        return res.status(500).json({
+            msg: 'Error when creating user in the DB. See error log on server console.',
+            user
+        });
+    }
 }
 
 const usersDelete = async (req = request, res = response) => {
